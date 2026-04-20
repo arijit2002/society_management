@@ -1,0 +1,51 @@
+{
+  "name": "society-management",
+  "version": "1.0.0",
+  "description": "Society Management System",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "concurrently -k \"vite\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",
+    "build": "vite build",
+    "dist": "vite build && electron-builder",
+    "rebuild": "electron-rebuild -f -w better-sqlite3"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "bcryptjs": "^2.4.3",
+    "date-fns": "^3.3.1",
+    "lucide-react": "^0.344.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.1",
+    "recharts": "^2.12.2",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.17",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "electron": "^29.1.0",
+    "electron-builder": "^24.13.3",
+    "electron-rebuild": "^3.2.9",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "vite": "^5.1.4",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.society.management",
+    "productName": "Society Management",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "node_modules/**/*"
+    ],
+    "mac": { "category": "public.app-category.utilities" },
+    "win": { "target": "nsis" },
+    "linux": { "target": "AppImage" }
+  }
+}
