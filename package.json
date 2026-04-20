@@ -7,7 +7,8 @@
     "dev": "concurrently -k \"vite\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",
     "build": "vite build",
     "dist": "vite build && electron-builder",
-    "rebuild": "electron-rebuild -f -w better-sqlite3"
+    "rebuild": "electron-rebuild -f -w better-sqlite3",
+    "postinstall": "electron-rebuild -f -w better-sqlite3"
   },
   "dependencies": {
     "better-sqlite3": "^11.3.0",
@@ -21,31 +22,61 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.2.1",
+    "@electron/rebuild": "^3.7.1",
+    "@vitejs/plugin-react": "^5.0.0",
     "autoprefixer": "^10.4.17",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
     "electron": "^39.8.5",
-    "electron-builder": "^24.13.3",
-    "electron-rebuild": "^3.2.9",
+    "electron-builder": "^25.1.8",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "vite": "^8.0.9",
-    "wait-on": "^7.2.0"
+     "wait-on": "^7.2.0"
   },
   "build": {
     "appId": "com.society.management",
     "productName": "Society Management",
+    "copyright": "Copyright © 2025",
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/better-sqlite3/**/*"
+    ],
     "directories": {
       "output": "release"
     },
     "files": [
       "dist/**/*",
       "electron/**/*",
-      "node_modules/**/*"
+      "node_modules/**/*",
+      "!node_modules/*/{CHANGELOG.md,README.md,readme.md,readme}",
+      "!node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!node_modules/**/*.d.ts"
     ],
-    "mac": { "category": "public.app-category.utilities" },
-    "win": { "target": "nsis" },
-    "linux": { "target": "AppImage" }
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        { "target": "dmg", "arch": ["x64", "arm64"] }
+      ],
+      "icon": "build/icon.icns"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "dmg": {
+      "title": "Society Management",
+      "window": { "width": 540, "height": 380 }
+    }
   }
 }
