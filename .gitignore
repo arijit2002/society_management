@@ -4,3 +4,7 @@ release/
 *.db
 .env
 .DS_Store
+
+# graphify - personal knowledge graph outputs
+graphify-out/
+.graphifyignore
