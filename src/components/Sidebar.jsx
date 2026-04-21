@@ -29,8 +29,9 @@ const navConfig = {
     { to: '/security/visitors', label: 'Visitor Log', icon: ClipboardList },
   ],
   maintenance: [
-    { to: '/maintenance',        label: 'Dashboard', icon: LayoutDashboard },
-    { to: '/maintenance/tasks',  label: 'My Tasks',  icon: ClipboardList },
+    { to: '/maintenance',             label: 'Dashboard',  icon: LayoutDashboard },
+    { to: '/maintenance/tasks',       label: 'My Tasks',   icon: ClipboardList },
+    { to: '/maintenance/complaints',  label: 'Complaints', icon: MessageSquare },
   ],
 };
 

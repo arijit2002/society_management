@@ -15,6 +15,7 @@ function registerComplaintHandlers() {
     `;
     const params = [];
     if (filters.resident_id) { query += ' AND c.resident_id = ?'; params.push(filters.resident_id); }
+    if (filters.assigned_to) { query += ' AND c.assigned_to = ?'; params.push(filters.assigned_to); }
     if (filters.status)      { query += ' AND c.status = ?';      params.push(filters.status); }
     if (filters.category)    { query += ' AND c.category = ?';    params.push(filters.category); }
     query += " ORDER BY CASE c.priority WHEN 'urgent' THEN 1 WHEN 'high' THEN 2 WHEN 'medium' THEN 3 ELSE 4 END, c.created_at DESC";
@@ -22,10 +23,12 @@ function registerComplaintHandlers() {
   });
 
   ipcMain.handle('complaints:add', (_, data) => {
-    const result = getDB().prepare(`
-      INSERT INTO complaints (resident_id, title, description, category, priority)
-      VALUES (?,?,?,?,?)`
-    ).run(data.resident_id, data.title, data.description, data.category, data.priority || 'medium');
+    const db = getDB();
+    const result = db.prepare(`
+      INSERT INTO complaints (resident_id, title, description, category, priority, assigned_to, status)
+      VALUES (?,?,?,?,?,?,?)`
+    ).run(data.resident_id, data.title, data.description, data.category, data.priority || 'medium',
+      data.assigned_to || null, data.assigned_to ? 'in_progress' : 'open');
     return { success: true, id: result.lastInsertRowid };
   });
 

@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
-import { Wrench, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
+import { Wrench, CheckCircle, Clock, AlertTriangle, MessageSquare } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Badge, statusVariant, priorityVariant, formatStatus } from '../../components/Badge';
 import { useAuthStore } from '../../store/authStore';
 
 export default function MaintenanceDashboard() {
   const [tasks, setTasks] = useState([]);
+  const [complaints, setComplaints] = useState([]);
   const { user, societyInfo } = useAuthStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) window.api.getTasks({ assigned_to: user.id }).then(setTasks);
+    if (user) {
+      window.api.getTasks({ assigned_to: user.id }).then(setTasks);
+      window.api.getComplaints({ assigned_to: user.id }).then(setComplaints);
+    }
   }, [user]);
 
   const pending   = tasks.filter(t => t.status === 'pending');
@@ -48,6 +54,33 @@ export default function MaintenanceDashboard() {
           <p className="text-xs text-red-500 mt-1">Urgent</p>
         </div>
       </div>
+
+      {/* Assigned Complaints */}
+      {complaints.filter(c => c.status !== 'resolved' && c.status !== 'closed').length > 0 && (
+        <div className="card border-2 border-orange-200 bg-orange-50/40">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-semibold text-gray-800 flex items-center gap-2">
+              <MessageSquare size={16} className="text-orange-500" />
+              Assigned Complaints ({complaints.filter(c => c.status !== 'resolved' && c.status !== 'closed').length})
+            </h3>
+            <button onClick={() => navigate('/maintenance/complaints')}
+              className="text-xs text-orange-600 hover:underline">View all</button>
+          </div>
+          <div className="space-y-2">
+            {complaints.filter(c => c.status !== 'resolved' && c.status !== 'closed').slice(0, 3).map(c => (
+              <div key={c.id} className="flex items-center justify-between p-3 bg-white rounded-xl border border-orange-100 gap-3">
+                <div>
+                  <p className="font-medium text-gray-800 text-sm">{c.title}</p>
+                  <p className="text-xs text-gray-500">{c.resident_name} · Flat {c.flat_no} · <span className="capitalize">{c.category}</span></p>
+                </div>
+                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${c.status === 'in_progress' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                  {formatStatus(c.status)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Active tasks */}
       {inProg.length > 0 && (

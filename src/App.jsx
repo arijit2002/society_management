@@ -23,8 +23,9 @@ import ResidentNotices    from './pages/resident/Notices';
 import SecurityDashboard from './pages/security/Dashboard';
 import Visitors          from './pages/security/Visitors';
 
-import MaintenanceDashboard from './pages/maintenance/Dashboard';
-import Tasks                from './pages/maintenance/Tasks';
+import MaintenanceDashboard    from './pages/maintenance/Dashboard';
+import Tasks                   from './pages/maintenance/Tasks';
+import MaintenanceComplaints   from './pages/maintenance/Complaints';
 
 function ProtectedRoute({ children, allowedRoles }) {
   const { user } = useAuthStore();
@@ -72,8 +73,9 @@ export default function App() {
         <Route path="/security/visitors" element={<ProtectedRoute allowedRoles={['security']}><Visitors /></ProtectedRoute>} />
 
         {/* Maintenance */}
-        <Route path="/maintenance"       element={<ProtectedRoute allowedRoles={['maintenance']}><MaintenanceDashboard /></ProtectedRoute>} />
-        <Route path="/maintenance/tasks" element={<ProtectedRoute allowedRoles={['maintenance']}><Tasks /></ProtectedRoute>} />
+        <Route path="/maintenance"            element={<ProtectedRoute allowedRoles={['maintenance']}><MaintenanceDashboard /></ProtectedRoute>} />
+        <Route path="/maintenance/tasks"      element={<ProtectedRoute allowedRoles={['maintenance']}><Tasks /></ProtectedRoute>} />
+        <Route path="/maintenance/complaints" element={<ProtectedRoute allowedRoles={['maintenance']}><MaintenanceComplaints /></ProtectedRoute>} />
 
         <Route path="*" element={<RoleRedirect />} />
       </Routes>
